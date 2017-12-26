@@ -1,1 +1,3 @@
 # StudyPython
+
+RECORD THE PYTHON STUDY HISTORY!
