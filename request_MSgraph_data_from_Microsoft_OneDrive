@@ -1,0 +1,87 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Graph;
+using Newtonsoft.Json.Linq;
+
+namespace ConsoleApp6
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var result = GetUsers().Result;
+
+            var result2 = GetOneDrive().Result;
+            Console.WriteLine(result2);
+            Console.WriteLine(result);
+
+			//get Graph data
+			var result_Graph = GetGraphData().Result;
+			Console.WriteLine(result_Graph);
+
+			Console.Read();
+
+        }
+
+
+        static async Task<string> GetUsers()
+        {
+            var token = "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkFRQUJBQUFBQUFDckhLdnJ4N0cyU2FaYlpoLXREbnA3MjNuRmJoVXkyUHNXaTFYQnh2RlFlWDktcV9aREpuN1RscEtwVEdqQ0liaUZ4Qkl5RzV2QWUyY2JQWE9BcGJEc1RNYUhtZUpuYTNaNExuNllOUnBfN0NBQSIsImFsZyI6IlJTMjU2IiwieDV0IjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIiwia2lkIjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIn0.eyJhdWQiOiJodHRwczovL21pY3Jvc29mdGdyYXBoLmNoaW5hY2xvdWRhcGkuY24iLCJpc3MiOiJodHRwczovL3N0cy5jaGluYWNsb3VkYXBpLmNuLzg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1Mi8iLCJpYXQiOjE1MTYwMjQ1OTQsIm5iZiI6MTUxNjAyNDU5NCwiZXhwIjoxNTE2MDI4NDk0LCJhaW8iOiJZMkJnWUdncVRIOGZyajdSNFArUFpmdENIaStaQ1FBPSIsImFwcF9kaXNwbGF5bmFtZSI6ImdyYXBoLnRlc3QiLCJhcHBpZCI6ImU3YzIxMjRlLTYwNjYtNDc5Mi1iNDliLWJiMmExY2VhZmJkNSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLmNoaW5hY2xvdWRhcGkuY24vODYzMTJiZTAtMzZlNy00YzllLWE4MmEtYWRmMjY5MGI2ODUyLyIsIm9pZCI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInJvbGVzIjpbIk1haWwuUmVhZFdyaXRlIiwiRGV2aWNlLlJlYWRXcml0ZS5BbGwiLCJVc2VyLlJlYWRXcml0ZS5BbGwiLCJDYWxlbmRhcnMuUmVhZCIsIkdyb3VwLlJlYWQuQWxsIiwiRGlyZWN0b3J5LlJlYWRXcml0ZS5BbGwiLCJDb250YWN0cy5SZWFkV3JpdGUiLCJHcm91cC5SZWFkV3JpdGUuQWxsIiwiRGlyZWN0b3J5LlJlYWQuQWxsIiwiVXNlci5SZWFkLkFsbCIsIk1haWwuUmVhZCIsIkNhbGVuZGFycy5SZWFkV3JpdGUiLCJNYWlsLlNlbmQiLCJDb250YWN0cy5SZWFkIl0sInN1YiI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInRpZCI6Ijg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1MiIsInV0aSI6Ik5wd2plV083QVUyTl9IZ0NfM2NHQUEiLCJ2ZXIiOiIxLjAifQ.SusbaBAv-Grab-YZpTX30pFBmVwYyT6ImT3hbh62cbYeWWIVI6zfZaBz28NYVKjSYu00kLwXKZ8qHG7zeWIJ7z4opuwxOb0w6ZBoJeGRgBBBgjAEhmcDvfAAC5ovngAFBb8mbVfpAZZalTIM0fzzLBnkimbsHmLYjvzgUj5yEW8sgfPgd68Q7Dw7NzIwIh3h-swOJVsg4DGV_G5StaZogR78Yd-uJHxADiQ-ROK7ojLOSRMw7r1pwvVcoi7MP_rqjY3qx3rZwl16JZW6Y9tVWtek4VGiQiXbrxTwwNEmpKalojhXXIZk-wLMFJSNmFdImgWly7hezWu3sfmaNCcsmA";
+
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            HttpResponseMessage response = await client.GetAsync("https://microsoftgraph.chinacloudapi.cn/v1.0/drive/root");
+            string retResp = await response.Content.ReadAsStringAsync();
+
+            return retResp;
+        }
+        static async Task<string> GetOneDrive()
+        {
+			var token = "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkFRQUJBQUFBQUFDckhLdnJ4N0cyU2FaYlpoLXREbnA3MjNuRmJoVXkyUHNXaTFYQnh2RlFlWDktcV9aREpuN1RscEtwVEdqQ0liaUZ4Qkl5RzV2QWUyY2JQWE9BcGJEc1RNYUhtZUpuYTNaNExuNllOUnBfN0NBQSIsImFsZyI6IlJTMjU2IiwieDV0IjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIiwia2lkIjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIn0.eyJhdWQiOiJodHRwczovL21pY3Jvc29mdGdyYXBoLmNoaW5hY2xvdWRhcGkuY24iLCJpc3MiOiJodHRwczovL3N0cy5jaGluYWNsb3VkYXBpLmNuLzg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1Mi8iLCJpYXQiOjE1MTYwMjQ1OTQsIm5iZiI6MTUxNjAyNDU5NCwiZXhwIjoxNTE2MDI4NDk0LCJhaW8iOiJZMkJnWUdncVRIOGZyajdSNFArUFpmdENIaStaQ1FBPSIsImFwcF9kaXNwbGF5bmFtZSI6ImdyYXBoLnRlc3QiLCJhcHBpZCI6ImU3YzIxMjRlLTYwNjYtNDc5Mi1iNDliLWJiMmExY2VhZmJkNSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLmNoaW5hY2xvdWRhcGkuY24vODYzMTJiZTAtMzZlNy00YzllLWE4MmEtYWRmMjY5MGI2ODUyLyIsIm9pZCI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInJvbGVzIjpbIk1haWwuUmVhZFdyaXRlIiwiRGV2aWNlLlJlYWRXcml0ZS5BbGwiLCJVc2VyLlJlYWRXcml0ZS5BbGwiLCJDYWxlbmRhcnMuUmVhZCIsIkdyb3VwLlJlYWQuQWxsIiwiRGlyZWN0b3J5LlJlYWRXcml0ZS5BbGwiLCJDb250YWN0cy5SZWFkV3JpdGUiLCJHcm91cC5SZWFkV3JpdGUuQWxsIiwiRGlyZWN0b3J5LlJlYWQuQWxsIiwiVXNlci5SZWFkLkFsbCIsIk1haWwuUmVhZCIsIkNhbGVuZGFycy5SZWFkV3JpdGUiLCJNYWlsLlNlbmQiLCJDb250YWN0cy5SZWFkIl0sInN1YiI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInRpZCI6Ijg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1MiIsInV0aSI6Ik5wd2plV083QVUyTl9IZ0NfM2NHQUEiLCJ2ZXIiOiIxLjAifQ.SusbaBAv-Grab-YZpTX30pFBmVwYyT6ImT3hbh62cbYeWWIVI6zfZaBz28NYVKjSYu00kLwXKZ8qHG7zeWIJ7z4opuwxOb0w6ZBoJeGRgBBBgjAEhmcDvfAAC5ovngAFBb8mbVfpAZZalTIM0fzzLBnkimbsHmLYjvzgUj5yEW8sgfPgd68Q7Dw7NzIwIh3h-swOJVsg4DGV_G5StaZogR78Yd-uJHxADiQ-ROK7ojLOSRMw7r1pwvVcoi7MP_rqjY3qx3rZwl16JZW6Y9tVWtek4VGiQiXbrxTwwNEmpKalojhXXIZk-wLMFJSNmFdImgWly7hezWu3sfmaNCcsmA";
+
+			HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            HttpResponseMessage response = await client.GetAsync("https://microsoftgraph.chinacloudapi.cn/v1.0/users/jason@xhptec.top/drive/root/children");
+            string retResp = await response.Content.ReadAsStringAsync();
+
+            return retResp;
+        }
+
+
+
+		//use Graph API to retreive data from OneDrive site
+    //2018 01 15 22:09 BTJ 
+		static async Task<string> GetGraphData()
+        {
+			var token = "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkFRQUJBQUFBQUFDckhLdnJ4N0cyU2FaYlpoLXREbnA3MjNuRmJoVXkyUHNXaTFYQnh2RlFlWDktcV9aREpuN1RscEtwVEdqQ0liaUZ4Qkl5RzV2QWUyY2JQWE9BcGJEc1RNYUhtZUpuYTNaNExuNllOUnBfN0NBQSIsImFsZyI6IlJTMjU2IiwieDV0IjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIiwia2lkIjoiWXU2RGptWGZZNFNfYzNmOFVHUzJDNXk4Zl9vIn0.eyJhdWQiOiJodHRwczovL21pY3Jvc29mdGdyYXBoLmNoaW5hY2xvdWRhcGkuY24iLCJpc3MiOiJodHRwczovL3N0cy5jaGluYWNsb3VkYXBpLmNuLzg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1Mi8iLCJpYXQiOjE1MTYwMjQ1OTQsIm5iZiI6MTUxNjAyNDU5NCwiZXhwIjoxNTE2MDI4NDk0LCJhaW8iOiJZMkJnWUdncVRIOGZyajdSNFArUFpmdENIaStaQ1FBPSIsImFwcF9kaXNwbGF5bmFtZSI6ImdyYXBoLnRlc3QiLCJhcHBpZCI6ImU3YzIxMjRlLTYwNjYtNDc5Mi1iNDliLWJiMmExY2VhZmJkNSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLmNoaW5hY2xvdWRhcGkuY24vODYzMTJiZTAtMzZlNy00YzllLWE4MmEtYWRmMjY5MGI2ODUyLyIsIm9pZCI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInJvbGVzIjpbIk1haWwuUmVhZFdyaXRlIiwiRGV2aWNlLlJlYWRXcml0ZS5BbGwiLCJVc2VyLlJlYWRXcml0ZS5BbGwiLCJDYWxlbmRhcnMuUmVhZCIsIkdyb3VwLlJlYWQuQWxsIiwiRGlyZWN0b3J5LlJlYWRXcml0ZS5BbGwiLCJDb250YWN0cy5SZWFkV3JpdGUiLCJHcm91cC5SZWFkV3JpdGUuQWxsIiwiRGlyZWN0b3J5LlJlYWQuQWxsIiwiVXNlci5SZWFkLkFsbCIsIk1haWwuUmVhZCIsIkNhbGVuZGFycy5SZWFkV3JpdGUiLCJNYWlsLlNlbmQiLCJDb250YWN0cy5SZWFkIl0sInN1YiI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInRpZCI6Ijg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1MiIsInV0aSI6Ik5wd2plV083QVUyTl9IZ0NfM2NHQUEiLCJ2ZXIiOiIxLjAifQ.SusbaBAv-Grab-YZpTX30pFBmVwYyT6ImT3hbh62cbYeWWIVI6zfZaBz28NYVKjSYu00kLwXKZ8qHG7zeWIJ7z4opuwxOb0w6ZBoJeGRgBBBgjAEhmcDvfAAC5ovngAFBb8mbVfpAZZalTIM0fzzLBnkimbsHmLYjvzgUj5yEW8sgfPgd68Q7Dw7NzIwIh3h-swOJVsg4DGV_G5StaZogR78Yd-uJHxADiQ-ROK7ojLOSRMw7r1pwvVcoi7MP_rqjY3qx3rZwl16JZW6Y9tVWtek4VGiQiXbrxTwwNEmpKalojhXXIZk-wLMFJSNmFdImgWly7hezWu3sfmaNCcsmA";
+
+			GraphServiceClient graphClient = new GraphServiceClient(
+                new DelegateAuthenticationProvider(async (request) =>
+                {
+                    await Task.Run(() => { request.Headers.Add("Authorization", $"Bearer {token}"); });
+                }));
+
+            graphClient.BaseUrl = "https://microsoftgraph.chinacloudapi.cn/v1.0/users/jason@xhptec.top/drive/root/children";
+			//get authenticate from BaseUrl
+			String result = graphClient.Drive.Root.Children.ToString();
+
+
+			/**
+			var graphServiceClient = new GraphServiceClient(
+				new DelegateAuthenticationProvider (async(request) =>
+					{
+						requestMessage.Header
+					}
+			))
+			**/
+			//var result = client.Users.Request().GetAsync().Result;
+			//string result = await ;
+			//string children = await graphClient.Drive.Root.Children;
+            return result;
+			}
+
+
+
+			}	
+		}
