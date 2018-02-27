@@ -1,0 +1,26 @@
+##for
+names = ['Micheal','Bob','Tracy']
+for name in names:
+    print(name)
+##end##
+
+#calculate 1-4
+sum = 0
+for x in [1,2,3,4]:
+    sum = sum + x
+print(sum)
+
+#range
+sum = 0
+for x in list(range(5)):
+    sum = sum + x
+print(sum)
+
+#print hello to everyone
+L = ['Bart','Lisa','Adam','Jason']
+for i in L:
+    print("Hello," + i + "!")
+Hello,Bart!
+Hello,Lisa!
+Hello,Adam!
+Hello,Jason!
