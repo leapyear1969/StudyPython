@@ -14,3 +14,10 @@ print(L[1][1])
 print(L[2][2])
 
 #tuple is for more security scenario 
+#add some metohd of List:
+#append():add element to list end
+#insert(index,element):add element to specific location
+#pop():remove last element
+#pop(index):remove element from sepecific location
+
+
