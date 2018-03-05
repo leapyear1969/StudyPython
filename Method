@@ -1,2 +1,12 @@
 http://docs.python.org/3/library/functions.html#abs 
 
+Dict example:
+##test dic
+d = {'Micheal':95,'Bob':75,'Tracy':85}
+print(d['Micheal'])
+d['Micheal'] = 100
+print(d['Micheal'])
+print('s' in d)
+
+##
+
