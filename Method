@@ -9,4 +9,20 @@ print(d['Micheal'])
 print('s' in d)
 
 ##
+##Method
+
+import math
+def quadratic(a,b,c):
+    if a == 0 & c != 0 & b != 0:
+        return -c/b
+    elif b == 0 & a != 0 & c/a <0:
+        return math.sqrt(-c/a)
+    elif a != 0:
+        return math.sqrt(((b*b-4*a*c)/(4*a*a))-(b/(2*a)))
+    #return x;
+
+a = 4
+b = 6
+c = 7
+print(quadratic(a,b,c))
 
