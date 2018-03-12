@@ -26,3 +26,11 @@ b = 6
 c = 7
 print(quadratic(a,b,c))
 
+##Method
+
+def power(x):
+    return  x * x
+
+print(power(5))
+
+print(pow(2,3))
