@@ -34,3 +34,27 @@ def power(x):
 print(power(5))
 
 print(pow(2,3))
+
+
+
+##Method
+
+def enroll(name, gender,age=6 , city = 'beijing'):
+    print('name',name)
+    print('gender',gender)
+    print('age',age)
+    print('city',city)
+
+enroll('jason','F')
+enroll('Adam','M',10,'ShangHai')
+
+#bug of default method
+
+def add_end(L = None):
+    if L is None:
+        L = []
+    L.append('end')
+    return L
+
+print(add_end())
+print(add_end())
