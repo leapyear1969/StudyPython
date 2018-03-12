@@ -58,3 +58,18 @@ def add_end(L = None):
 
 print(add_end())
 print(add_end())
+
+
+##Method a2 + b2 +c2
+
+# use list or tuple to calc
+
+def calc(*numbers):
+    sum = 0
+    for i in numbers:
+        sum = sum + i * i
+    return sum
+
+nums = [1, 2, 3]
+print(calc(*nums))
+print(calc(1,2,3))
