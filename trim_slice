@@ -1,0 +1,14 @@
+#trim() to cut off first and last space
+
+#首先判断该字符是否为空，若为空，直接返回该字符串
+#若不为空，判断首尾字符是否为空
+#如果为空，就使用递归，再次调用该函数的trim（），否则返回该函数
+
+def trim(s):
+    if len(s) == 0:
+        return s
+    elif s[0] == ' ':
+        return (trim(s[1:]))
+    elif s[-1] == ' ':
+        return (trim(s[:-1]))
+    return s
