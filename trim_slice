@@ -1,3 +1,9 @@
+
+通常一个切片操作要提供三个参数 [start_index:  stop_index:  step]  
+start_index是切片的起始位置
+stop_index是切片的结束位置（不包括）
+step可以不提供，默认值是1，步长值不能为0，不然会报错ValueError
+
 #trim() to cut off first and last space
 
 #首先判断该字符是否为空，若为空，直接返回该字符串
@@ -8,9 +14,11 @@ def trim(s):
     if len(s) == 0:
         return s
     elif s[0] == ' ':
-        return (trim(s[1:]))
+        return (trim(s[1:])) 
+        #s[1:]表示从第2个元素开始，0，1的开始，往后推一个元素开始计算
     elif s[-1] == ' ':
         return (trim(s[:-1]))
+        #s[:-1]表示从倒数第一个元素
     return s
     
 if trim('hello  ') != 'hello':
