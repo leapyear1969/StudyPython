@@ -1,0 +1,21 @@
+#Iteration
+
+#判断一个对象是否适合迭代
+#from collections import Iterable
+#print(isinstance(123,Iterable))
+
+#请使用迭代查找一个list中最小和最大值，并返回一个tuple
+
+AList = [-1, 0, -3, -14, -5, -6,37]
+
+def findMinAndMax(Alist):
+    max = AList[0]
+    min = Alist[0]
+    for i in AList:
+        if i > max:
+            max = i
+        elif i < min:
+            min = i
+    return (max, min)
+
+print(findMinAndMax(AList))
