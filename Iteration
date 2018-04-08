@@ -19,3 +19,5 @@ def findMinAndMax(Alist):
     return (max, min)
 
 print(findMinAndMax(AList))
+
+#迭代创建。。。。
