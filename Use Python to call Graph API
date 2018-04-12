@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+# coding: utf-8
+# for Chinese office365
+
+import sys
+import json
+import requests
+
+
+def json_pretty(str_data):
+    '''input is string'''
+    dj = json.loads(str_data)
+    print (json.dumps(dj, sort_keys=True, indent=4, separators=(',', ': ')))
+
+# personal
+# tenant = '9188040d-6c67-4c5b-b112-36a304b66dad'
+# clientid = 'a8c3e9f3-e33e-44f2-b4cd-d50cf76f3946'
+# client_secret = 'ncxiHJ8623}_mhhGDLAI3%*'
+# cn dev version
+tenant = '86312be0-36e7-4c9e-a82a-adf2690b6852'
+clientid = '9118d160-d29a-49f0-91a1-9b2a071b1f0f'
+client_secret = '9Dx1bkl4L0tK5NHiMO8o0M12nIt4Bwl8s3LDs0gjsBA='
+tenanturl = 'https://login.chinacloudapi.cn/common/adminconsent?client_id=' + clientid + '&state=12345&redirect_uri=https://developer.microsoft.com/zh-cn/graph'
+print ("tenanturl: \n%s" % tenanturl)
+#tenant = raw_input("Please input the tenant: ")
+tenant = '86312be0-36e7-4c9e-a82a-adf2690b6852'
+
+post_body = 'client_id=' + clientid + '&resource=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn&scope=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn%2F.default&client_secret=' +client_secret + '&grant_type=client_credentials'
+post_url = 'https://login.chinacloudapi.cn/' + tenant + '/oauth2/token'
+print ("url: %s" % post_url)
+print (post_body)
+
+# # for debug
+# import logging
+# from httplib import HTTPConnection      # for python2
+# HTTPConnection.debuglevel = 1
+# # logging.getLogger().setLevel(logging.DEBUG)
+# # requests_log = logging.getLogger("requests.packages.urllib3")
+# # requests_log.setLevel(logging.DEBUG)
+# # requests_log.propagate = True
+
+############ request, the following ###########
+content_type = 'application/x-www-form-urlencoded'
+headers = {'Content-type': content_type} ####, 'Host': 'login.windows.net'}
+print (headers)
+data = post_body
+token_result = requests.post(post_url, headers=headers, data=data)
+print (token_result)
+json_pretty(token_result.content)
+#sys.exit(0)
+
+# retrieve the access_token from the response
+response = json.loads(token_result.content)
+token = ''
+if 'access_token' in response.keys():
+    token = response['access_token']
+    print (token)
+#sys.exit(0)
+
+graphurl = 'https://microsoftgraph.chinacloudapi.cn/v1.0/'
+getheaders = {'Content-type': 'application/json', 'Authorization': 'Bearer ' + token}
+#getheaders = {'Authorization': 'Bearer ' + token}
+
+s = requests.session()
+userurl = graphurl + 'users'
+r = s.get(userurl, headers=getheaders)
+print (userurl)
+json_pretty(r.content)
+# retrieve the id from the response, as we failed to request the
+# url: .../me/drive, but users/id/drive is okay
+userresponse = json.loads(r.content)
+# exception
+usermail = "jason@xhptec.top"
+userid = ''
+for user in userresponse['value']:
+    if user['mail'] == usermail:
+        userid = user['id']
+print ('userid: %s' % userid)
+rooturl = graphurl + 'users/' + userid
+
+#driverurl = rooturl + 'drive'
+#r = s.get(driverurl, headers=getheaders)
+#print (driverurl)
+#json_pretty(r.content)
+#driveresponse = json.loads(r.content)
+#driveid = driveresponse['id']
+#print ("driveid: %s" % driveid)
+#sys.exit(0)
+
+#driverooturl = driverurl + '/root'
+#print ("rooturl: %s" % (driverooturl))
+#r2 = s.get(driverooturl, headers=getheaders)
+#json_pretty(r2.content)
+
+#childurl = driverooturl + '/children'
+#childurl = graphurl + 'me/drive/root/children'
+#print ("children url: %s" % (childurl))
+#r3 = s.get(childurl, headers=getheaders)
+#json_pretty(r3.content)
+#sys.exit(0)
+
+#child2url = graphurl + 'drives/' + driveid + '/root/children'
+#print ("child2ren url: %s" % (child2url))
+#r3 = s.get(child2url, headers=getheaders)
+#json_pretty(r3.content)
+#sys.exit(0)
+
+getMemberof = 'https://microsoftgraph.chinacloudapi.cn/v1.0/users/jason@xhptec.top/memberof'
+print ("Memberof url: %s" % (getMemberof))
+r3 = s.get(getMemberof, headers=getheaders)
+json_pretty(r3.content)
+print (getheaders)
+print("+++++++++++++++++++++++++++++")
+
+# failure
+# itemurl = driverurl + '/items'
+# print "item url: %s" % (itemurl)
+# r4 = s.get(itemurl, headers=getheaders)
+# json_pretty(r4.content)
+
+# meurl = 'https://graph.microsoft.com/v1.0/me/drive'
+# meurl = rooturl + '/messages'
+# print meurl
+# #print getheaders
+# r5 = s.get(meurl, headers=getheaders)
+# json_pretty(r5.content)
+
+
+
+
+
+
