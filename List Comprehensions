@@ -1,0 +1,11 @@
+#create List Comprehensions
+
+L = list(range(1,11))
+print(L)
+
+L1 = []
+for x in range(1,11):
+    L1.append(x * x)
+print(L1)
+
+L2 = [x*x for x in range(1,11)]
