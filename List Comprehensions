@@ -30,3 +30,4 @@ L4 = ['Hello','WORLD','MICOROSOFT','aPPle']
 #写在一行里面
 L5 = [s.upper() for s in L4]
 print(L5)
+
