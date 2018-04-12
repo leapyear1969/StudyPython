@@ -1,0 +1,18 @@
+L1 = ['Hello','WORLD',18,'APPLe',None]
+L2 = [s.lower() for s in L1 if isinstance(s,str)]
+print(L2)
+
+#generator
+L = [x*x for x in range(10)]
+print(L)
+
+g = (x*x for x in range(10))
+print(g)
+
+#print element in generator
+print(next(g))
+print(next(g))
+print(next(g))
+print(next(g))
+for n in g:
+    print(n)
