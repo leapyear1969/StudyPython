@@ -1,0 +1,107 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Collections.Specialized;
+using System.Web;
+
+namespace PostRequest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			//get token
+			WebRequest requestToken = WebRequest.Create("https://login.chinacloudapi.cn/86312be0-36e7-4c9e-a82a-adf2690b6852/oauth2/token");
+			requestToken.Method = "POST";
+			requestToken.ContentType = "application/x-www-form-urlencoded";
+			string postDataToken = "client_id=e7c2124e-6066-4792-b49b-bb2a1ceafbd5&resource=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn&scope=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn%2F.default&client_secret=sVo1hZFzBr6V9LOTFbwd2VDWsxIdGXVnWdyAJ9GvD4U=&grant_type=client_credentials";
+			byte[] byteArrayToken = Encoding.UTF8.GetBytes(postDataToken);
+			Stream dataStreamToken = requestToken.GetRequestStream();
+			// Write the data to the request stream.
+			dataStreamToken.Write(byteArrayToken, 0, byteArrayToken.Length);
+			// Close the Stream object.
+			dataStreamToken.Close();
+			// Get the response.
+			WebResponse responseToken = requestToken.GetResponse();
+			// Display the status.
+			Console.WriteLine(((HttpWebResponse)responseToken).StatusDescription);
+			// Get the stream containing content returned by the server.
+			dataStreamToken = responseToken.GetResponseStream();
+			// Open the stream using a StreamReader for easy access.
+			StreamReader readerToken = new StreamReader(dataStreamToken);
+			// Read the content.
+			string responseFromServerToken = readerToken.ReadToEnd();
+			// Display the content.
+			Console.WriteLine(responseFromServerToken);
+			// Clean up the streams.
+			readerToken.Close();
+			dataStreamToken.Close();
+			responseToken.Close();
+
+			//get token from Response;
+			//NameValueCollection urlParameters = HttpUtility.ParseQueryString(responseToken.ResponseUri.Query);
+
+			//string accessToken = HttpUtility.ParseQueryString(responseFromServerToken);
+
+			Console.WriteLine("++++++++++++++"+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+
+			//create a request using a URL to receive data
+			WebRequest request = WebRequest.Create("https://microsoftgraph.chinacloudapi.cn/v1.0/drives/b!8-jQAKOyDEm3799nHxcsYT-1kcGumXhPs_2mnSkcebOosOACWF6qT4E_rWwVsV1y/items/01Q7QIFKK6MGCFEIHEXBD26VWEY2BIUC5E/copy");
+
+			//add token to the request 
+			request.Headers["Authorization"] = "Bearer " + "eyJ0eXAiOiJKV1QiLCJub25jZSI6IkFRQUJBQUFBQUFDckhLdnJ4N0cyU2FaYlpoLXREbnA3My1OZ3FLVlJCNmpnVWI3ZDczVlFmNkRmMDdjcUZVVnlxMG1hMFVaUEZnZklMeVdQU2J0bC02NEktT2k0VndsTkJjallMN0dYVVFzb2Q5Q0RNZjdlRXlBQSIsImFsZyI6IlJTMjU2IiwieDV0IjoiQXhpSmYyOGVMb19ZdG5RbzRSY1FMRzU4WUtnIiwia2lkIjoiQXhpSmYyOGVMb19ZdG5RbzRSY1FMRzU4WUtnIn0.eyJhdWQiOiJodHRwczovL21pY3Jvc29mdGdyYXBoLmNoaW5hY2xvdWRhcGkuY24iLCJpc3MiOiJodHRwczovL3N0cy5jaGluYWNsb3VkYXBpLmNuLzg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1Mi8iLCJpYXQiOjE1MzMxMTk0NzksIm5iZiI6MTUzMzExOTQ3OSwiZXhwIjoxNTMzMTIzMzc5LCJhaW8iOiJZMkJnWUZoMTB1L0RORVBSTjR0MDF5aStzMTNHRHdBPSIsImFwcF9kaXNwbGF5bmFtZSI6ImdyYXBoLnRlc3QiLCJhcHBpZCI6ImU3YzIxMjRlLTYwNjYtNDc5Mi1iNDliLWJiMmExY2VhZmJkNSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLmNoaW5hY2xvdWRhcGkuY24vODYzMTJiZTAtMzZlNy00YzllLWE4MmEtYWRmMjY5MGI2ODUyLyIsIm9pZCI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInJvbGVzIjpbIk1haWwuUmVhZFdyaXRlIiwiRGV2aWNlLlJlYWRXcml0ZS5BbGwiLCJVc2VyLlJlYWRXcml0ZS5BbGwiLCJDYWxlbmRhcnMuUmVhZCIsIkdyb3VwLlJlYWQuQWxsIiwiRGlyZWN0b3J5LlJlYWRXcml0ZS5BbGwiLCJDb250YWN0cy5SZWFkV3JpdGUiLCJHcm91cC5SZWFkV3JpdGUuQWxsIiwiRGlyZWN0b3J5LlJlYWQuQWxsIiwiVXNlci5SZWFkLkFsbCIsIk1haWwuUmVhZCIsIkNhbGVuZGFycy5SZWFkV3JpdGUiLCJNYWlsLlNlbmQiLCJDb250YWN0cy5SZWFkIl0sInN1YiI6ImVhOWRlYThkLTYwNTItNDc4YS04NWFlLTg3ODdjNjVhM2U4MSIsInRpZCI6Ijg2MzEyYmUwLTM2ZTctNGM5ZS1hODJhLWFkZjI2OTBiNjg1MiIsInV0aSI6IndkTlREU3hfWlVTdzdTTm5UMm9LQUEiLCJ2ZXIiOiIxLjAifQ.hKKAcxahaks-zQuDHzYQuA5_TZmOy3PxFKLn82iLE-1OnmRf4NgNEEQhHNKuoDtraQvfPMujL5TPwUrZnKE8T4apK08G_Xum4nadlgxqngwkmxtLHpADbF06264LIGMvUBJbJsGAnynT4FQKH3OvQa7P6iKu5bHL9sOF9v2bBdDsHl-prBdj4nj57G6_nmeJqUxopdFhDeBPDr__7lXRmlpQZogljesvWQkK-w9dG3C4n1-zRzSOfAJFatauqSIIehp2Tgry9Qeu2KSYQ_lc78q_M2jZeI5pP3zwt3l_4iAf-evX3r8Ii3c2jLam5GuKcHrKSLCkbnlZKcoSjZED1A"; 
+
+			//set method property of the request to POST
+			request.Method = "POST";
+
+
+			//create post data and convert it to a byte array
+			string postData = "";
+			byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+			//set Contenttype and length
+			request.ContentType = "application/x-www-form-urlencoded";
+			request.ContentLength = byteArray.Length;
+
+			//get request stream 
+			Stream dataStream = request.GetRequestStream();
+
+			//write data to request stream 
+			dataStream.Write(byteArray, 0, byteArray.Length);
+
+			//close datastream
+			dataStream.Close();
+
+			//get the response
+			WebResponse response = request.GetResponse();
+
+			//display status 
+			Console.WriteLine("Status Description: "+ ((HttpWebResponse)response).StatusDescription + "===========================");
+
+			//get the stream containing conent returned by server 
+			dataStream = response.GetResponseStream();
+
+			//open the stream by using a stream reader for easy access
+			StreamReader reader = new StreamReader(dataStream);
+
+			//read content
+			String responseFromServer = reader.ReadToEnd();
+
+			//display the content 
+			Console.WriteLine("Response :" + responseFromServer);
+
+			//clean up the stream
+			reader.Close();
+			dataStream.Close();
+			response.Close();
+
+		}
+
+	}
+
+}
