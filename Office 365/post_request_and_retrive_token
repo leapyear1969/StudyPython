@@ -13,7 +13,7 @@ namespace ConsoleApplication7
     {
         static void Main(string[] args)
         {
-            WebRequest request = WebRequest.Create("https://login.chinacloudapi.cn/86312be0-36e7-4c9e-a82a-adf2690b6852/oauth2/token");
+            WebRequest request = WebRequest.Create("https://login.chinacloudapi.cn/8632312be0-36e7-4c9e-a82a-adf2690b6852/oauth2/token");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             string postData = "client_id=e7c2124e-6066-4792-b49b-bb2a1ceafbd5&resource=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn&scope=https%3A%2F%2Fmicrosoftgraph.chinacloudapi.cn%2F.default&client_secret=sVo1hZFzBr6V9LOTFbwd2VDWsxIdGXVnWdyAJ9GvD4U=&grant_type=client_credentials";
