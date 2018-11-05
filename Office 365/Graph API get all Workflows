@@ -1,0 +1,137 @@
+using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.WorkflowServices;
+using System;
+using System.Linq;
+using System.Security;
+using System.Collections.Generic;
+
+namespace WFExplorer
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			Console.WriteLine("Enter the Office 365 Login Name");
+			string userName = Console.ReadLine();
+			string password = GetInput("Password", true);
+
+			Console.WriteLine("Enter Site Url:");
+			string siteUrl = Console.ReadLine();
+
+			//string workflowName = "MyWorkflow";
+			//var workflowStatus = WorkflowStatus.Suspended; // WorkflowStatus.Terminated or any value from the WorkflowStatus enumeration.
+			var clientContext = GetClientContext(siteUrl, userName, password);
+			Web site = clientContext.Web;
+			//create workflowServiceManager
+			WorkflowServicesManager workflowServicesManager = new WorkflowServicesManager(clientContext,site);
+			//var workflowInstanceService = workflowServicesManager.GetWorkflowInstanceService();
+			var workflowDeploymentService = workflowServicesManager.GetWorkflowDeploymentService();
+			//var workflowSubscriptionService = workflowServicesManager.GetWorkflowSubscriptionService();
+			var publishedWorkflowDefinitions = workflowDeploymentService.EnumerateDefinitions(true);
+			clientContext.Load(publishedWorkflowDefinitions);
+			clientContext.ExecuteQuery();
+
+			//get all running workflows
+			Console.WriteLine("以下是正在运行的工作流：");
+			Console.Write("{0,-20} {1,5}\n", " Name", " List ID");
+			foreach (var workflowDefinition in publishedWorkflowDefinitions) {
+				Console.WriteLine(" {0,-20} {1,5: N1}", workflowDefinition.DisplayName, workflowDefinition.Id.ToString());
+			}
+
+			//get suspending workflows
+			Console.WriteLine("如果想检查工作流的状态，请输入列表和工作流的名称");
+			Console.WriteLine("List Name:");
+			string listName = Console.ReadLine();
+			Console.WriteLine("Workflow Name");
+			string workflowName = Console.ReadLine();
+			var workflowStatus = WorkflowStatus.Suspended;
+			Guid listGUID = GetListGUID(clientContext, listName);
+			//get workflow subscriptions
+			var wfSubscriptionService = workflowServicesManager.GetWorkflowSubscriptionService();
+			var wfSubscriptions = wfSubscriptionService.EnumerateSubscriptionsByList(listGUID);
+			clientContext.Load(wfSubscriptions,wfSubs => wfSubs.Where(wfSub => wfSub.Name == workflowName));
+			clientContext.ExecuteQuery();
+	
+			var wfSubscription = wfSubscriptions.First();
+			//get workflow instances
+			var wfInstanceService = workflowServicesManager.GetWorkflowInstanceService();
+			var wfInstanceCollection = wfInstanceService.Enumerate(wfSubscription);
+			clientContext.Load(wfInstanceCollection, wfInstances => wfInstances.Where(wfI => wfI.Status == workflowStatus));
+			clientContext.ExecuteQuery();
+			Console.WriteLine("以下是有问题的工作流：");
+			Console.Write("{0,-20} {1,5}\n", " Name", " List ID");
+
+			foreach (var wfInstance in wfInstanceCollection)
+			{
+				Console.WriteLine(wfInstance.Properties["Microsoft.SharePoint.ActivationProperties.CurrentItemUrl"]);
+			}
+
+			//Console.WriteLine("loop is Over!!!");
+			Console.ReadKey();
+
+			//get all instances 
+			//var workflowInstances = workflowInstanceService.EnumerateInstancesForListItem(listId, itemId); 
+		}
+
+
+
+
+
+		private static ClientContext GetClientContext(string siteUrl, string userName, string password)
+		{
+			ClientContext clientContext = new ClientContext(siteUrl);
+			var securePassword = new SecureString();
+			foreach (char c in password.ToCharArray()) securePassword.AppendChar(c);
+			clientContext.Credentials = new SharePointOnlineCredentials(userName, securePassword);
+			return clientContext;
+		}
+
+		private static string GetInput(string label, bool isPassword)
+		{
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.Write("{0} : ", label);
+			Console.ForegroundColor = ConsoleColor.Gray;
+
+			string strPwd = "";
+
+			for (ConsoleKeyInfo keyInfo = Console.ReadKey(true); keyInfo.Key != ConsoleKey.Enter; keyInfo = Console.ReadKey(true))
+			{
+				if (keyInfo.Key == ConsoleKey.Backspace)
+				{
+					if (strPwd.Length > 0)
+					{
+						strPwd = strPwd.Remove(strPwd.Length - 1);
+						Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+						Console.Write(" ");
+						Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+					}
+				}
+				else if (keyInfo.Key != ConsoleKey.Enter)
+				{
+					if (isPassword)
+					{
+						Console.Write("*");
+					}
+					else
+					{
+						Console.Write(keyInfo.KeyChar);
+					}
+					strPwd += keyInfo.KeyChar;
+
+				}
+
+			}
+			Console.WriteLine("");
+
+			return strPwd;
+		}
+
+		private static Guid GetListGUID(ClientContext context, string listTitle)
+		{
+			var list = context.Web.Lists.GetByTitle(listTitle);
+			context.Load(list, l => l.Id);
+			context.ExecuteQuery();
+			return list.Id;
+		}
+	}
+}
