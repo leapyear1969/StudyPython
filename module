@@ -10,3 +10,13 @@ def sum3 (arg1, arg2):
 
 sum3(10,20);
 print("全局变量total:",total)
+
+
+#define support module 
+
+def print_func( par ):
+    print("Hello ,",par,"!")
+    return
+#use support module to active    
+import support
+support.print_func("Jason")
