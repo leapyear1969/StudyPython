@@ -73,3 +73,23 @@ def calc(*numbers):
 nums = [1, 2, 3]
 print(calc(*nums))
 print(calc(1,2,3))
+
+
+add new batch:
+#example 1:
+sum = lambda  arg1, arg2: arg1 + arg2;
+
+#call sum function
+print ("sum is : ", sum(10,20))
+
+print ("the sum result is :",sum(22,35))
+
+
+#Example 2:
+def sum2 (arg1, arg2):
+    total = arg1 + arg2
+    print("Total Sum:", total);
+    return total;
+
+#call sum2
+total = sum2(10,20)
