@@ -1,3 +1,12 @@
 py module 
 import:
 
+#test Variable scope
+total = 0;
+def sum3 (arg1, arg2):
+    total = arg1 + arg2;
+    print("total的局部变量是:" ,total)
+    return total;
+
+sum3(10,20);
+print("全局变量total:",total)
